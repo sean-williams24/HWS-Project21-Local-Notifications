@@ -6,15 +6,35 @@
 //  Copyright © 2019 Sean Williams. All rights reserved.
 //
 
+import UserNotifications
 import UIKit
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Register", style: .plain, target: self, action: #selector(registerLocal))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Schedule", style: .plain, target: self, action: #selector(scheduleLocal))
+        
     }
 
+    @objc func registerLocal() {
+        let center = UNUserNotificationCenter.current()
+        
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+            if granted {
+                print("YES")
+            } else {
+                print("Heichaletza!")
+            }
+        }
+    
+    }
+    
+    @objc func scheduleLocal() {
+        
+    }
 
 }
 
