@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     }
 
     @objc func registerLocal() {
+        //Get access to the current version of the user notifiction center
         let center = UNUserNotificationCenter.current()
         
         center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
@@ -33,7 +34,27 @@ class ViewController: UIViewController {
     }
     
     @objc func scheduleLocal() {
+        let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests()
         
+        //Define some content
+        let content = UNMutableNotificationContent()
+        content.title = "Title goes here"
+        content.body = "Main text goes here"
+        content.categoryIdentifier = "customIdentifier"
+        content.userInfo = ["customData": "fizzbuzz"]
+        content.sound = UNNotificationSound.default
+        
+        var dateComponents = DateComponents()
+        dateComponents.hour = 10
+        dateComponents.minute = 30
+//        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        
+        center.add(request)
+
     }
 
 }
