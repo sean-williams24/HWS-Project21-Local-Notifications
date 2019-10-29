@@ -43,7 +43,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         let content = UNMutableNotificationContent()
         content.title = "Title goes here"
         content.body = "Main text goes here"
-        content.categoryIdentifier = "customIdentifier"
+        content.categoryIdentifier = "alarm"
         content.userInfo = ["customData": "fizzbuzz"]
         content.sound = UNNotificationSound.default
         
@@ -83,11 +83,17 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             case UNNotificationDefaultActionIdentifier:
                 // the user swiped to unlock
                 print("Default identifier")
+                let ac = UIAlertController(title: "User Swiped", message: nil, preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                present(ac, animated: true)
 
             case "show":
                 // the user tapped our "show more info…" button
                 print("Show more information…")
-
+                let ac = UIAlertController(title: "Show More Info", message: nil, preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                present(ac, animated: true)
+                
             default:
                 break
             }
