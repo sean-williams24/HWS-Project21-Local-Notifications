@@ -15,7 +15,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         super.viewDidLoad()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Register", style: .plain, target: self, action: #selector(registerLocal))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Schedule", style: .plain, target: self, action: #selector(scheduleLocal))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Schedule", style: .plain, target: self, action: #selector(scheduleLocalFromButton))
         
     }
 
@@ -33,7 +33,12 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     
     }
     
-    @objc func scheduleLocal() {
+    @objc func scheduleLocalFromButton() {
+        scheduleLocal(seconds: 5)
+    }
+    
+    
+    func scheduleLocal(seconds: Double) {
         registerCategories()
         
         let center = UNUserNotificationCenter.current()
@@ -51,12 +56,11 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         dateComponents.hour = 10
         dateComponents.minute = 30
 //        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: seconds, repeats: false)
         
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         
         center.add(request)
-
     }
 
     //Register alarm category with a single button
@@ -65,7 +69,8 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         center.delegate = self
         
         let show = UNNotificationAction(identifier: "show", title: "Tell Me More", options: .foreground)
-        let category = UNNotificationCategory(identifier: "alarm", actions: [show], intentIdentifiers: [])
+        let remindMeLater = UNNotificationAction(identifier: "remind", title: "Remind Me tomorrow", options: .foreground)
+        let category = UNNotificationCategory(identifier: "alarm", actions: [show, remindMeLater], intentIdentifiers: [])
         
         center.setNotificationCategories([category])
         
@@ -93,6 +98,10 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
                 let ac = UIAlertController(title: "Show More Info", message: nil, preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "OK", style: .default))
                 present(ac, animated: true)
+                
+            case "remind":
+                print("Remind me later")
+                scheduleLocal(seconds: 86400)
                 
             default:
                 break
