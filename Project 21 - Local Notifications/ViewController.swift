@@ -59,7 +59,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
 
     }
 
-    
+    //Register alarm category with a single button
     func registerCategories() {
         let center = UNUserNotificationCenter.current()
         center.delegate = self
@@ -69,6 +69,32 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         
         center.setNotificationCategories([category])
         
+    }
+    
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+            // pull out the buried userInfo dictionary
+        let userInfo = response.notification.request.content.userInfo
+
+        if let customData = userInfo["customData"] as? String {
+            print("Custom data received: \(customData)")
+
+            switch response.actionIdentifier {
+            case UNNotificationDefaultActionIdentifier:
+                // the user swiped to unlock
+                print("Default identifier")
+
+            case "show":
+                // the user tapped our "show more info…" button
+                print("Show more information…")
+
+            default:
+                break
+            }
+        }
+
+        // you must call the completion handler when you're done
+        completionHandler()
     }
 }
 
